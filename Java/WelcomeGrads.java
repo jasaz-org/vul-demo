@@ -1,0 +1,14 @@
+public class WelcomeGrads {
+    public static void main(String[] args) {
+        int count = 0;
+        while (count < 5) {
+            System.out.println("Hello, Grads of 2023. Welcome to DB !!");
+            count = count + 1;
+            try {
+                Thread.sleep(1000); // Add a delay of 1 second
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
