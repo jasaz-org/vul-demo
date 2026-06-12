@@ -9,6 +9,7 @@ jobs:
     env:
       image-name:  test-jdk
       output-file: open_jdk_vulnerabilities
+      DOCKER_HOST: tcp://localhost:2375
     runs-on: gh-private-runner
     steps:
       - name: Checkout code
@@ -33,6 +34,7 @@ jobs:
     env:
       image-name: test-wolfi:1.0
       output-file: wolfi-jre-vulnerabilities
+      DOCKER_HOST: tcp://localhost:2375
     runs-on: gh-private-runner
     steps:
       - name: Checkout Code
