@@ -1,0 +1,45 @@
+name: test_vulnerabilities
+on: 
+ push:
+   branches:
+     - main
+jobs:
+
+  openjdk-vulnerabilities:
+    env:
+      image-name:  test-jdk
+      output-file: open_jdk_vulnerabilities
+    runs-on: gh-private-runner
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build Open JDK container image
+        run: | 
+          cd ./Java/
+          docker build -t ${{ env.image-name }} .
+      - name: Run the container
+        run: docker run ${{ env.image-name }}
+      - name: Scan the image with Trivy
+        run: docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy image hello-grads > ${{ env.output-file }}
+      - name: Output Vulnerabilities
+        run: cat ${{ env.output-file }}
+        
+  wolfi-jre-vulnerabilites:
+    env:
+      image-name: test-wolfi:1.0
+      output-file: wolfi-jre-vulnerabilities
+    runs-on: gh-private-runner
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Build Wolfi JRE image
+        run: |
+          cd ./Wolfi-JRE/
+          docker build -t  ${{ env.image-name }} .
+      - name: Scan the image with Trivy
+        run: docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy image ${{ env.image-name }} > ${{ env.output-file }}
+      - name: Output Vulnerabilities
+        run: cat ${{ env.output-file}}
+          
+      
+    
