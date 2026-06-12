@@ -9,16 +9,15 @@ jobs:
     env:
       image-name:  test-jdk
       output-file: open_jdk_vulnerabilities
-      DOCKER_HOST: tcp://localhost:2375
     runs-on: gh-private-runner
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Wait for Docker Daemon to start
+      - name: Wait for Docker Socket to be ready
         run: |
-          echo "Waiting for Docker daemon to initialize on port 2375..."
-          timeout 30s bash -c 'until printf "" 2>/dev/null >/dev/tcp/127.0.0.1/2375; do sleep 10; done'
-          echo "Docker daemon is up and responding!"
+          echo "Waiting for /var/run/docker.sock to appear..."
+          timeout 30s bash -c 'until [ -S /var/run/docker.sock ]; do sleep 5; done'
+          echo "Docker socket is ready!"
       - name: Build Open JDK container image
         run: | 
           cd ./Java/
@@ -39,16 +38,15 @@ jobs:
     env:
       image-name: test-wolfi:1.0
       output-file: wolfi-jre-vulnerabilities
-      DOCKER_HOST: tcp://localhost:2375
     runs-on: gh-private-runner
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      - name: Wait for Docker Daemon to start
+      - name: Wait for Docker Socket to be ready
         run: |
-          echo "Waiting for Docker daemon to initialize on port 2375..."
-          timeout 30s bash -c 'until printf "" 2>/dev/null >/dev/tcp/127.0.0.1/2375; do sleep 10; done'
-          echo "Docker daemon is up and responding!"
+          echo "Waiting for /var/run/docker.sock to appear..."
+          timeout 30s bash -c 'until [ -S /var/run/docker.sock ]; do sleep 5; done'
+          echo "Docker socket is ready!"
       - name: Build Wolfi JRE image
         run: |
           cd ./Wolfi-JRE/
