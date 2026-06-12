@@ -19,8 +19,13 @@ jobs:
           docker build -t ${{ env.image-name }} .
       - name: Run the container
         run: docker run ${{ env.image-name }}
-      - name: Scan the image with Trivy
-        run: docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy image hello-grads > ${{ env.output-file }}
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.image-name }}
+          format: 'table'
+          output: '${{ env.output-file }}'
+          severity: 'CRITICAL,HIGH'
       - name: Output Vulnerabilities
         run: cat ${{ env.output-file }}
         
@@ -36,8 +41,13 @@ jobs:
         run: |
           cd ./Wolfi-JRE/
           docker build -t  ${{ env.image-name }} .
-      - name: Scan the image with Trivy
-        run: docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy image ${{ env.image-name }} > ${{ env.output-file }}
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.image-name }}
+          format: 'table'
+          output: '${{ env.output-file }}'
+          severity: 'CRITICAL,HIGH'
       - name: Output Vulnerabilities
         run: cat ${{ env.output-file}}
           
