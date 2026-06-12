@@ -14,6 +14,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Wait for Docker Daemon to start
+        run: |
+          echo "Waiting for Docker daemon to initialize on port 2375..."
+          timeout 30s bash -c 'until printf "" 2>/dev/null >/dev/tcp/127.0.0.1/2375; do sleep 10; done'
+          echo "Docker daemon is up and responding!"
       - name: Build Open JDK container image
         run: | 
           cd ./Java/
@@ -39,6 +44,11 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      - name: Wait for Docker Daemon to start
+        run: |
+          echo "Waiting for Docker daemon to initialize on port 2375..."
+          timeout 30s bash -c 'until printf "" 2>/dev/null >/dev/tcp/127.0.0.1/2375; do sleep 10; done'
+          echo "Docker daemon is up and responding!"
       - name: Build Wolfi JRE image
         run: |
           cd ./Wolfi-JRE/
