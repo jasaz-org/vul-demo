@@ -59,7 +59,7 @@ jobs:
       #     output: '${{ env.output-file }}'
       #     severity: 'CRITICAL,HIGH'
       # - name: Output Vulnerabilities
-        run: cat ${{ env.output-file}}
+        # run: cat ${{ env.output-file}}
           
       
     # Comment for triggering Workflow..
